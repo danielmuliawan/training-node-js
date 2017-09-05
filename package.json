@@ -1,0 +1,26 @@
+{
+  "name": "training_admin_systems",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielmuliawan/training-node-js.git"
+  },
+  "author": "BIMA TEAM",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielmuliawan/training-node-js/issues"
+  },
+  "homepage": "https://github.com/danielmuliawan/training-node-js#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
+    "ejs": "^2.5.7",
+    "express": "^4.15.4",
+    "tedious": "^2.0.0"
+  }
+}

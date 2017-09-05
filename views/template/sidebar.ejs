@@ -1,0 +1,14 @@
+<div class="ui sidebar inverted vertical menu">
+    <div class="item">
+      <a class="ui logo icon image" href="/" style="width:55px;margin-right: 1em">
+        <img src="/images/<%- image%>">
+      </a>
+      <a href="/"><b><%- title%></b></a>
+    </div>
+    <a class="item <% if(page=='pbi2'){%> <%- 'active'%> <% } %>" href="/pbi2">PBI 2</a>
+    <a class="item <% if(page=='pbi3'){%> <%- 'active'%> <% } %>" href="/pbi3">PBI 3</a>
+    <a class="item <% if(page=='pbi4'){%> <%- 'active'%> <% } %>" href="/pbi4">PBI 4</a>
+    <% if(title=="Express JS"){ %>
+    <a class="item <% if(page=='pbi6'){%> <%- 'active'%> <% } %>" href="/pbi6">PBI 6</a>
+    <% } %>
+</div>

@@ -1,0 +1,158 @@
+<div class="ui segment padded">
+    <h3 class="ui header"><i class="filter icon"></i> Filter Data</h3>
+    <form class="ui form" id="form">
+        <div class="two fields">
+        <div class="field">
+            <label>Name</label>
+            <input id="name" type="text" name="name" placeholder="Name">
+        </div>
+        <div class="field">
+            <label>Username</label>
+            <input id="username" type="text" name="username" placeholder="Username">
+        </div>
+        </div>
+        <div class="two fields">
+        <div class="field">
+            <label>Email</label>
+            <input id="email" type="text" name="email" placeholder="Email">
+        </div>
+        <div class="field">
+            <label>Active</label>
+            <select id="active" class="ui fluid dropdown" name="active">
+            <option value="">Status User</option>
+            <option value="1">Active</option>
+            <option value="0">Not Active</option>
+            </select>
+        </div>
+        </div>
+        <button class="ui primary button" type="submit"><i class="filter icon"></i> Filter</button>
+        <button class="ui basic button" id="reset-filter"><i class="refresh icon"></i> Reset</button>
+    </form>
+</div>
+<div class="ui segment padded">
+    <div class="table-responsive">
+        <div class="ui inverted dimmer">
+            <div class="ui text loader">Processing...</div>
+        </div>
+        <a class="ui primary button" href="/pbi4"><i class="plus icon"></i> Add Data</a>
+        <div class="ui divider"></div>
+        <table id="table" class="ui celled table" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="center aligned">ID User</th>
+                    <th class="center aligned">Name</th>
+                    <th class="center aligned">Email</th>
+                    <th class="center aligned">Username</th>
+                    <th class="center aligned">Active</th>
+                    <th class="center aligned">Action</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th class="center aligned">ID User</th>
+                    <th class="center aligned">Name</th>
+                    <th class="center aligned">Email</th>
+                    <th class="center aligned">Username</th>
+                    <th class="center aligned">Active</th>
+                    <th class="center aligned">Action</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<script>
+var filter=false;
+var table=$('#table').DataTable({
+    "processing": true,
+    "serverSide": true,
+    "searching": false,
+    "ajax": {
+        url: "/getDataTable",
+        type: 'get',
+        data: function ( d ) {
+            d.form_filter=$('#form').serialize();
+            d.filter=filter;
+            return d;
+        }
+    },
+    "columnDefs": [
+        {"className": "center aligned", "targets": [0,4,-1]},
+        {
+            "targets": -1,
+            "bSortable": false,
+            "createdCell": function(td, cellData, rowData, row, col) {
+                $(td).prepend(
+                    '<i class="trash link icon" onclick="viewDeleteData(\''+rowData.id_user+'\',\''+rowData.name.trim()+'\')"></i>'
+                );
+            }
+        }
+    ],
+    "columns": [
+        {"data": "id_user"},
+        {"data": "name"},
+        {"data": "email"},
+        {"data": "username"},
+        {"data": "active"},
+        {"data": "","defaultContent":""}
+    ]
+});
+
+$('.dropdown').dropdown();
+
+$('#form').submit(function (e) {
+    filter=true;
+    table.ajax.reload();
+    $('html,body').animate({scrollTop: $('#table').offset().top-70},500);
+    return false;
+});
+
+$('#reset-filter').click(function(){
+    $('html,body').animate({scrollTop: $('#table').offset().top-70},500);
+    $("#active").dropdown('clear');
+    $('#name,#username,#email').val("");
+    filter=false;
+    table.ajax.reload();
+});
+
+function viewDeleteData(id,nama)
+{
+    swal({
+        title: "Delete Data",
+        text: "Delete this data? ("+nama+")",
+        type: "warning",
+        showLoaderOnConfirm: true,
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        preConfirm: function () {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url:"deleteData",
+                    type:"post",
+                    data:{'id':id},
+                    success:function(data){
+                        if(data.status)
+                            resolve(data.message);
+                        else
+                            reject(data.message);
+                    }                      
+                });
+            })
+        }
+    }).then(function (message) {
+            swal({
+                type: 'success',
+                title: 'Success!',
+                text: message,
+                showCancelButton: false,
+                confirmButtonText: "OK"
+            }).then(
+                function(){
+                    $('#table').DataTable().ajax.reload();
+            });
+        },
+        function () {
+
+        }
+    );
+}
+</script>

@@ -1,0 +1,80 @@
+<div class="ui segment padded">
+    <div class="ui inverted dimmer">
+        <div class="ui text loader">Processing...</div>
+    </div>
+    <form class="ui form" id="form">
+        <div class="two fields">
+          <div class="required field">
+              <label>Name</label>
+              <input id="name" type="text" name="name" placeholder="Name" required>
+          </div>
+          <div class="required field">
+              <label>Username</label>
+              <input id="username" type="text" name="username" placeholder="Username" required>
+          </div>
+        </div>
+        <div class="two fields">
+          <div class="required field">
+              <label>Email</label>
+              <input id="email" type="email" name="email" placeholder="Email" required>
+          </div>
+          <div class="required field">
+              <label>Active</label>
+              <select id="active" class="ui fluid dropdown" name="active" required>
+              <option value="">Status User</option>
+              <option value="1">Active</option>
+              <option value="0">Not Active</option>
+              </select>
+          </div>
+        </div>
+        <button class="ui primary button" type="submit"><i class="checkmark icon"></i> Submit</button>
+    </form>
+</div>
+<script>
+$('.dropdown').dropdown();
+$('#form').submit(function (e) {
+    e.preventDefault();
+    $.ajax({
+        url:"insertData",
+        type:"post",
+        data:$(this).serialize(),
+        beforeSend:function(){
+          $('.dimmer').dimmer('show');
+        },
+        success:function(data){
+          if("<%- title%>" == "Node JS")
+            data=JSON.parse(data);
+          if(data.status)
+          {
+            swal({
+            type: 'success',
+            title: 'Success!',
+            text: data.message,
+            showCancelButton: false,
+            confirmButtonText: "OK"
+            }).then(
+                function(){
+                  $('.dimmer').dimmer('hide');
+                  if("<%- title%>" == "Node JS")
+                    document.location='http://localhost:3000/pbi3';
+                  else
+                    document.location='http://localhost:3400/pbi6';
+            });
+          }
+          else
+          {
+            swal({
+            type: 'error',
+            title: 'Error!',
+            text: data.message,
+            showCancelButton: false,
+            confirmButtonText: "OK"
+            }).then(
+                function(){
+
+            });
+          }          
+        }                      
+    });
+});
+</script>

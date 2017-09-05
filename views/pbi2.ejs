@@ -1,0 +1,38 @@
+<div class="ui segment padded">
+  <div class="ui dimmer">
+    <div class="ui text loader">Requesting...</div>
+  </div>
+  <div class="ui grid">
+    <div class="four wide column">
+      <form class="ui form" id="form">
+        <div class="field">
+          <label>Hostname</label>
+          <input type="text" name="hostname" placeholder="Enter Hostname" required>
+        </div>
+        <div class="field">
+          <label>Path</label>
+          <input type="text" name="path" placeholder="Enter Path" required>
+        </div>
+        <button class="ui primary button" type="submit">Request</button>
+      </form>
+    </div>
+  </div>
+  <div id='content'></div>
+</div>
+<script>
+$('#form').submit(function (e) {
+    e.preventDefault();
+    $.ajax({
+      url:'/requestData',
+      type:'post',
+      data:$(this).serialize(),
+      beforeSend: function() {
+        $(".dimmer").dimmer('show');
+      },
+      success:function(data){
+        $(".dimmer").dimmer('hide');
+        $("#content").html(data);
+      }                      
+    });
+  });
+</script>
